@@ -3,7 +3,7 @@
 # SIGMA - Sistem Informasi Golongan Masyarakat
 
 **SIGMA** adalah sebuah program yang dirancang untuk membantu masyarakat dan pemerintah dalam menyalurkan bantuan sosial secara lebih tepat sasaran.  
-Aplikasi ini bertujuan untuk mengklasifikasikan kondisi sosial ekonomi masyarakat secara akurat berdasarkan data penghasilan, pekerjaan, jumlah kendaraan, kewarganegaraan,biaya listrik dan air, jumlah hutang, dan tempat tinggal.
+Aplikasi ini bertujuan untuk mengklasifikasikan kondisi sosial ekonomi masyarakat secara akurat berdasarkan data penghasilan, pekerjaan, jumlah kendaraan, kewarganegaraan, biaya listrik dan air, jumlah utang, dan tempat tinggal.
 
 ---
 
