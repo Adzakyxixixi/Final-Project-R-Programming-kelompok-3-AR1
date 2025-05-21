@@ -6,8 +6,14 @@ ui <- fluidPage(
   tags$head(
     tags$style(HTML("
       body {
-        background-color: #ffe6f0;
-        font-family: 'Arial', cursive, sans-serif;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-image: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('pertow2.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-attachment: fixed;
       }
       .title-panel {
         background-color: #ffccdd;
@@ -15,10 +21,10 @@ ui <- fluidPage(
         border-radius: 10px;
         margin-bottom: 20px;
         text-align: center;
-        background-image: url('https://cdn-icons-png.flaticon.com/512/3135/3135755.png');
+        background-image: url('SIGMA.png');
         background-repeat: no-repeat;
         background-position: right;
-        background-size: 80px;
+        background-size: 160px;
       }
       .table-output {
         background-color: white;
@@ -45,27 +51,48 @@ ui <- fluidPage(
         from {opacity: 0;}
         to {opacity: 1;}
       }
+      @keyframes fadeSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animated-logo {
+      animation: fadeSlideIn 1s ease-out;
+    }
     "))
   ),
+  
   uiOutput("main_ui")
 )
 
 server <- function(input, output, session) {
-  halaman <- reactiveVal("home")  # nilai awal
+  halaman <- reactiveVal("home")
+  bantuan <- reactiveVal("")
   
   observeEvent(input$mulai_btn, { halaman("form") })
   observeEvent(input$keluar_btn, { halaman("closing") })
   observeEvent(input$ulang_btn, { halaman("home") })
+  observeEvent(input$tentang_btn, { halaman("about") })
+  observeEvent(input$kembali_btn, { halaman("home") })
   
   output$main_ui <- renderUI({
     switch(halaman(),
            "home" = fluidPage(
              div(class = "home-panel",
-                 h1("🌸 Selamat Datang di SIGMA! 🌸"),
-                 tags$h3("Sistem Informasi Golongan Masyarakat"),
-                 tags$img(src = "https://cdn-icons-png.flaticon.com/512/3135/3135755.png", height = "120px"),
+                 tags$div(
+                   style = "position: absolute; top: 20px; right: 20px;",
+                 ),
+                 tags$img(src = "SIGMA.png", height = "200px"),
                  br(), br(),
-                 actionButton("mulai_btn", "Mulai Sekarang", class = "start-button")
+                 actionButton("mulai_btn", "Mulai Sekarang", class = "start-button"),
+                 br(), br(),
+                 actionButton("tentang_btn", "Tentang Aplikasi", class = "start-button")
              )
            ),
            "form" = fluidPage(
@@ -80,29 +107,43 @@ server <- function(input, output, session) {
                              choices = c("Rumah Pribadi", "Kontrakan", "Rumah Keluarga")),
                  conditionalPanel(
                    condition = "input.tinggal == 'Rumah Pribadi'",
-                   numericInput("luas_rumah", "Berapa Luas Rumah Anda? (m2)", value = 36)
+                   numericInput("luas_rumah", "4. Berapa Luas Rumah Anda? (m2)", value = 36)
                  ),
-                 numericInput("listrik", "4. Daya Listrik (Watt)", value = 900),
-                 numericInput("air", "5. Tagihan Air per Bulan (Rp)", value = 50000),
-                 selectInput("wni", "6. Apakah Anda WNI?", choices = c("Ya", "Tidak")),
-                 selectInput("pns", "7. Apakah Anda PNS?", choices = c("Ya", "Tidak")),
-                 numericInput("kendaraan", "8. Jumlah Kendaraan (Motor/Mobil)", value = 1),
-                 numericInput("hutang", "9. Total Hutang (Rp)", value = 0),
-                 numericInput("njop", "10. NJOP (Rp)", value = 50000000),
-                 actionButton("proses", "🔍 Proses Klasifikasi")
+                 numericInput("listrik", "5. Daya Listrik (Watt)", value = 900),
+                 numericInput("air", "6. Tagihan Air per Bulan (Rp)", value = 50000),
+                 selectInput("wni", "7. Apakah Anda WNI?", choices = c("Ya", "Tidak")),
+                 selectInput("pns", "8. Apakah Anda PNS?", choices = c("Ya", "Tidak")),
+                 numericInput("kendaraan", "9. Jumlah Kendaraan (Motor/Mobil)", value = 1),
+                 numericInput("hutang", "10. Total Hutang (Rp)", value = 0),
+                 numericInput("njop", "11. NJOP (Rp)", value = 50000000),
+                 actionButton("proses", "🔍 Proses Klasifikasi!")
                ),
                mainPanel(
                  h4("Hasil Analisis:"),
                  div(class = "table-output", tableOutput("hasil_tabel")),
+                 uiOutput("penjelasan_bantuan"),
                  br(),
                  actionButton("keluar_btn", "Selesai & Keluar", class = "exit-button")
                )
              )
            ),
+           "about" = fluidPage(
+             div(class = "home-panel",
+                 h2("📖 Tentang Aplikasi SIGMA"),
+                 tags$p("SIGMA (Sistem Informasi Golongan Masyarakat) membantu mengklasifikasikan status sosial ekonomi masyarakat."),
+                 tags$ul(
+                   tags$li("💰 Mengelompokkan penghasilan ke dalam desil ekonomi."),
+                   tags$li("🏠 Menentukan kelas sosial berdasar penghasilan & tempat tinggal."),
+                   tags$li("🎯 Memberikan rekomendasi bantuan sosial yang relevan.")
+                 ),
+                 br(),
+                 actionButton("kembali_btn", "Kembali ke Beranda", class = "start-button")
+             )
+           ),
            "closing" = fluidPage(
              div(class = "closing-panel",
-                 h1("Terima Kasih Sudah Menggunakan Aplikasi Ini"),
-                 tags$h3("Semoga harimu penuh berkah dan bantuan yang tepat sasaran"),
+                 h1("Terima Kasih Sudah Menggunakan SIGMA"),
+                 tags$h3("Satu hal kecil hari ini, merupakan awal untuk hal besar"),
                  tags$img(src = "https://cdn-icons-png.flaticon.com/512/4385/4385141.png", height = "120px"),
                  br(),
                  actionButton("ulang_btn", "Kembali ke Awal", class = "start-button")
@@ -116,19 +157,28 @@ server <- function(input, output, session) {
     tanggungan <- input$tanggungan
     tinggal <- input$tinggal
     kendaraan <- input$kendaraan
+    wni <- input$wni
+    pns <- input$pns
     perkapita <- penghasilan / tanggungan
-    
     desil_ekonomi <- findInterval(perkapita, desil_ref, rightmost.closed = TRUE)
     
-    if (desil_ekonomi < 2) {
-      bantuan <- "PBI-JKN, PKH, dan KIP-K"
-    } else if (desil_ekonomi < 3) {
-      bantuan <- "BLT dan KIP-K"
-    } else if (desil_ekonomi < 4) {
-      bantuan <- "BLT saja"
+    # Cek kelayakan dasar berdasarkan status WNI dan PNS
+    if (wni == "Tidak" || pns == "Ya") {
+      rekomendasi <- "Tidak termasuk prioritas"
     } else {
-      bantuan <- "Tidak termasuk prioritas"
+      # Tentukan bantuan berdasarkan desil
+      rekomendasi <- if (desil_ekonomi < 2) {
+        "PBI-JKN, PKH, dan KIP-K"
+      } else if (desil_ekonomi < 3) {
+        "BLT dan KIP-K"
+      } else if (desil_ekonomi < 4) {
+        "BLT saja"
+      } else {
+        "Tidak termasuk prioritas"
+      }
     }
+    
+    bantuan(rekomendasi)
     
     kelas_sosial <- if (perkapita < 700000 || tinggal == "Kontrakan") {
       "Kelas Bawah"
@@ -142,12 +192,27 @@ server <- function(input, output, session) {
     
     hasil <- data.frame(
       Kategori = c("Kelas Sosial", "Pendapatan per Kapita", "Desil Ke", "Rekomendasi Bantuan"),
-      Hasil = c(kelas_sosial, paste0("Rp ", perkapita_format), desil_ekonomi, bantuan)
+      Hasil = c(kelas_sosial, paste0("Rp ", perkapita_format), desil_ekonomi, bantuan())
     )
     
     output$hasil_tabel <- renderTable({
       hasil
     }, striped = TRUE, hover = TRUE, spacing = "m")
+  })
+  
+  output$penjelasan_bantuan <- renderUI({
+    req(bantuan())
+    if (bantuan() != "Tidak termasuk prioritas") {
+      div(class = "table-output",
+          h4("Penjelasan Bantuan yang Direkomendasikan:"),
+          tags$ul(
+            if (grepl("PBI-JKN", bantuan())) tags$li(tags$b("PBI-JKN:"), " Bantuan iuran untuk program Jaminan Kesehatan Nasional bagi masyarakat kurang mampu."),
+            if (grepl("PKH", bantuan())) tags$li(tags$b("PKH:"), " Program Keluarga Harapan yang memberikan bantuan tunai kepada keluarga miskin dengan syarat tertentu."),
+            if (grepl("KIP-K", bantuan())) tags$li(tags$b("KIP-K:"), " Kartu Indonesia Pintar Kuliah untuk membantu biaya kuliah bagi mahasiswa dari keluarga kurang mampu."),
+            if (grepl("BLT", bantuan())) tags$li(tags$b("BLT:"), " Bantuan Langsung Tunai yang diberikan saat kondisi darurat atau krisis ekonomi.")
+          )
+      )
+    }
   })
 }
 
