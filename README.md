@@ -30,7 +30,7 @@ SIGMA mengolah informasi penting untuk:
 ## Cara Penggunaan
 
 1. Klik tombol **"Mulai Sekarang"**
-2. Masukkan data yang diperlukan (misalnya: penghasilan, kondisi tempat tinggal, dan lain-lain)
+2. Masukkan data yang diperlukan (misalnya: penghasilan, tempat tinggal, dan lain-lain)
 3. Klik tombol **"Proses Klasifikasi"**
 4. Hasil klasifikasi dan rekomendasi bantuan sosial akan ditampilkan
 
