@@ -17,7 +17,7 @@ SIGMA mengolah informasi penting untuk:
 
 ---
 
-##Fitur Utama
+## Fitur Utama
 
 - **Kategorisasi Golongan Masyarakat**  
   Memudahkan pemerintah dalam mengelompokkan masyarakat sesuai kondisi sosial ekonomi, sehingga bantuan dapat diberikan secara lebih tepat sasaran.
